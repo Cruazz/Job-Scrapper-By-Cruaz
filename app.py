@@ -204,6 +204,10 @@ with tab2:
 
 with tab3:
     st.subheader("Personal System Configuration")
+    if "settings_saved" in st.session_state:
+        st.success("✅ Settings saved successfully!")
+        del st.session_state["settings_saved"]
+
     with st.form("settings_form"):
         new_email = st.text_input("Target Email for Digest", value=current_settings['target_email'])
         new_keywords = st.text_area("Keywords (comma separated)", value=", ".join(current_settings['keywords']))
@@ -214,16 +218,28 @@ with tab3:
             k_list = [x.strip() for x in new_keywords.split(",") if x.strip()]
             l_list = [x.strip() for x in new_locations.split(",") if x.strip()]
             save_settings(user_access_key, k_list, l_list, new_salary, new_email)
-            st.success("Settings saved!")
+            st.session_state["settings_saved"] = True
             st.rerun()
     
     st.markdown("---")
+    
+    # Placeholder for logs if they exist in session state
+    if "scraper_logs" in st.session_state:
+        st.subheader("Last Scraper Execution Log")
+        st.code(st.session_state["scraper_logs"])
+        if st.button("Clear Logs"):
+            del st.session_state["scraper_logs"]
+            st.rerun()
+
     if st.button("🚀 Run Scraper for This Key", use_container_width=True):
         with st.spinner(f"Scraping for user: {user_access_key}..."):
             import subprocess
+            # Use subprocess to run the main pipeline
             result = subprocess.run([sys.executable, "main.py", "--user-key", user_access_key], capture_output=True, text=True)
-            st.code(result.stdout + result.stderr)
-            st.success("Finished!")
+            
+            # Save logs to session state so they survive the rerun
+            st.session_state["scraper_logs"] = result.stdout + result.stderr
+            st.success("Scraper finished successfully!")
             st.rerun()
 
 st.sidebar.markdown("---")
