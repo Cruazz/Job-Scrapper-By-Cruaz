@@ -33,15 +33,15 @@ class EmailSender:
         msg = MIMEMultipart("alternative")
         msg["Subject"] = f"Job Digest - {datetime.now().strftime('%Y-%m-%d')}"
         msg["From"] = settings.smtp_user
-        msg["To"] = settings.to_email
+        msg["To"] = self.to_email
 
         msg.attach(MIMEText(html_content, "html"))
 
         try:
-            with smtplib.SMTP(settings.smtp_server, settings.smtp_port) as server:
+            with smtplib.SMTP(self.smtp_server, self.smtp_port) as server:
                 server.starttls()
-                server.login(settings.smtp_user, settings.smtp_password)
+                server.login(self.smtp_user, self.smtp_password)
                 server.send_message(msg)
-                logger.info(f"Email digest sent to {settings.to_email}")
+                logger.info(f"Email digest sent to {self.to_email}")
         except Exception as e:
-            logger.error(f"Failed to send email: {e}")
+            logger.error(f"Failed to send email: {str(e)}")

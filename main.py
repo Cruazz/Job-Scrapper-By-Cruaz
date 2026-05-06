@@ -17,10 +17,14 @@ logging.basicConfig(
     level=getattr(logging, settings.log_level),
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     handlers=[
-        logging.FileHandler("logs/aggregator.log"),
-        logging.StreamHandler()
+        logging.FileHandler("logs/aggregator.log", encoding='utf-8'),
+        logging.StreamHandler(sys.stdout)
     ]
 )
+# Ensure stdout uses utf-8
+if sys.stdout.encoding != 'utf-8':
+    import io
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 logger = logging.getLogger(__name__)
 
 def get_active_settings(user_key):
