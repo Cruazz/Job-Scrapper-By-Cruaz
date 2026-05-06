@@ -11,6 +11,7 @@ from emailer.sender import EmailSender
 import hashlib
 import json
 import argparse
+import sys
 
 # Configure logging
 logging.basicConfig(
