@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { background: #2c3e50; color: #fff; padding: 20px; text-align: center; border-radius: 5px 5px 0 0; }
+        .job-card { border: 1px solid #ddd; border-radius: 5px; padding: 15px; margin-bottom: 20px; }
+        .job-title { font-size: 18px; font-weight: bold; color: #2980b9; text-decoration: none; }
+        .company { font-weight: bold; color: #7f8c8d; }
+        .location { color: #95a5a6; font-size: 0.9em; }
+        .score { display: inline-block; background: #27ae60; color: #fff; padding: 2px 8px; border-radius: 3px; font-size: 0.8em; margin-top: 5px; }
+        .footer { text-align: center; font-size: 0.8em; color: #7f8c8d; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Daily Job Digest</h1>
+            <p>{{ date }}</p>
+        </div>
+        
+        <p>Hi there! Here are the new job matches found for you today:</p>
+        
+        {% for job in jobs %}
+        <div class="job-card">
+            <a href="{{ job.url }}" class="job-title">{{ job.title }}</a><br>
+            <span class="company">{{ job.company }}</span> | <span class="location">{{ job.location }}</span><br>
+            <div class="score">Match Score: {{ job.match_score }}</div>
+            <p>{{ job.description[:200] }}...</p>
+        </div>
+        {% else %}
+        <p>No new matches found today. We'll keep looking!</p>
+        {% endfor %}
+        
+        <div class="footer">
+            <p>Automated Job Aggregator Bot</p>
+        </div>
+    </div>
+</body>
+</html>
